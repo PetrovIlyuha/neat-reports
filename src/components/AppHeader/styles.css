@@ -1,0 +1,18 @@
+.fluid {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: center;
+  width: 100vw;
+}
+
+.main_logo {
+  width: 130px;
+}
+
+.users_right_nav_section {
+  padding-top: 10px;
+  font-family: "Open Sans", sans-serif;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
