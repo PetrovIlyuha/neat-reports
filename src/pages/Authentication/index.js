@@ -9,21 +9,19 @@ const Authentication = props => {
   const descriptionText = isLogin
     ? "First Time Here? Create an Account"
     : "Already a User? Use your Credentials to Log In";
+  const apiUrl = isLogin ? "/users/login" : "/users";
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [{ isLoading, response, error }, doFetchData] = useFetch(
-    "/users/login"
-  );
-  console.log(isLogin);
+  const [username, setUsername] = useState("");
+  const [{ isLoading, response, error }, doFetchData] = useFetch(apiUrl);
+
   const handleSubmit = e => {
     e.preventDefault();
+    const user = isLogin ? { email, password } : { email, password, username };
     doFetchData({
       method: "post",
       data: {
-        user: {
-          email: "softclubplus@gmail.com",
-          password: "topcodingsoftschools"
-        }
+        user
       }
     });
   };
@@ -39,6 +37,17 @@ const Authentication = props => {
             </p>
             <form onSubmit={handleSubmit}>
               <fieldset>
+                {!isLogin && (
+                  <fieldset className="form-group">
+                    <input
+                      type="text"
+                      className="form-control form-control-lg"
+                      placeholder="Username"
+                      value={username}
+                      onChange={e => setUsername(e.target.value)}
+                    />
+                  </fieldset>
+                )}
                 <fieldset className="form-group">
                   <input
                     type="email"
