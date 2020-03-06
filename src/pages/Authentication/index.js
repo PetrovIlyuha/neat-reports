@@ -1,9 +1,29 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import useFetch from "../../hooks/useFetch";
 
 const Authentication = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [{ isLoading, response, error }, doFetchData] = useFetch(
+    "/users/login"
+  );
+
+  console.log("useFetch", response, isLoading, error);
+
+  const handleSubmit = e => {
+    e.preventDefault();
+    doFetchData({
+      method: "post",
+      data: {
+        user: {
+          email: "softclubplus@gmail.com",
+          password: "topcodingsoftschools"
+        }
+      }
+    });
+  };
+
   return (
     <div className="auth-page">
       <div className="container page">
@@ -13,7 +33,7 @@ const Authentication = () => {
             <p className="text-xs-center">
               <Link to="/register">First Time Here? Create an Account</Link>
             </p>
-            <form>
+            <form onSubmit={handleSubmit}>
               <fieldset>
                 <fieldset className="form-group">
                   <input
@@ -36,6 +56,7 @@ const Authentication = () => {
                 <button
                   className="btn btn-lg btn-primary pull-xs-right"
                   type="submit"
+                  disabled={isLoading}
                 >
                   Sign In
                 </button>
