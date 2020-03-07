@@ -1,6 +1,7 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { Link, Redirect } from "react-router-dom";
 import useFetch from "../../hooks/useFetch";
+import useLocalStorage from "../../hooks/useLocalStorage";
 
 const Authentication = props => {
   const isLogin = props.match.path === "/login";
@@ -10,10 +11,14 @@ const Authentication = props => {
     ? "First Time Here? Create an Account"
     : "Already a User? Use your Credentials to Log In";
   const apiUrl = isLogin ? "/users/login" : "/users";
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
+  const [isSuccessfulSubmit, setIsSuccessfulSubmit] = useState(false);
+
   const [{ isLoading, response, error }, doFetchData] = useFetch(apiUrl);
+  const [token, setToken] = useLocalStorage("token");
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -25,6 +30,19 @@ const Authentication = props => {
       }
     });
   };
+
+  useEffect(() => {
+    if (!response) {
+      return;
+    }
+    setToken(response.user.token);
+    setIsSuccessfulSubmit(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [response]);
+
+  if (isSuccessfulSubmit) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <div className="auth-page">
