@@ -28,8 +28,7 @@ export default url => {
         setIsLoading(false);
         setError(error?.response?.data);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoading]);
+  }, [error, isLoading, options, url]);
 
   return [{ isLoading, response, error }, doFetchData];
 };

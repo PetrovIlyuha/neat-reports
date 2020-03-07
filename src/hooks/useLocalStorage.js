@@ -6,7 +6,6 @@ export default (key, initialValue = "") => {
   });
   useEffect(() => {
     localStorage.setItem(key, value);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
+  }, [value, key]);
   return [value, setValue];
 };

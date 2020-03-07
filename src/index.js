@@ -4,15 +4,15 @@ import { render } from "react-dom";
 import Routes from "./pages/routes";
 import "./index.css";
 import AppHeader from "./components/AppHeader";
-
+import { CurrectUserProvider } from "./contexts/currentUser";
 const App = () => {
   return (
-    <div>
+    <CurrectUserProvider>
       <Router>
         <AppHeader />
         <Routes />
       </Router>
-    </div>
+    </CurrectUserProvider>
   );
 };
 render(<App />, document.getElementById("root"));
