@@ -4,7 +4,7 @@ export const CurrentUserContext = createContext([{}, () => {}]);
 
 export const CurrectUserProvider = ({ children }) => {
   const [state, setState] = useState({
-    idLoading: false,
+    isLoading: false,
     isLoggedIn: null,
     currentUser: null
   });

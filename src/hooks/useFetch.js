@@ -5,7 +5,7 @@ export default url => {
   const baseUrl = "https://conduit.productionready.io/api";
   const [isLoading, setIsLoading] = useState(false);
   const [response, setResponse] = useState(null);
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(null);
   const [options, setOptions] = useState({});
 
   const doFetchData = (options = {}) => {
@@ -24,9 +24,10 @@ export default url => {
         setResponse(res.data);
       })
       .catch(err => {
-        console.log("error", err);
         setIsLoading(false);
-        setError(error?.response?.data);
+        if (err) {
+          setError(err.response.data);
+        }
       });
   }, [error, isLoading, options, url]);
 
