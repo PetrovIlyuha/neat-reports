@@ -1,13 +1,38 @@
-import React, { useEffect } from "react";
+import { useEffect, useContext } from "react";
 import useFetch from "../hooks/useFetch";
-
+import { CurrentUserContext } from "../contexts/currentUser";
+import useLocalStorage from "../hooks/useLocalStorage";
 const CurrentUserChecker = ({ children }) => {
   const [{ response }, doFetchData] = useFetch("/user");
+  const [, setCurrentUserState] = useContext(CurrentUserContext);
+  const [token] = useLocalStorage("token");
 
   useEffect(() => {
+    if (!token) {
+      setCurrentUserState(state => ({
+        ...state,
+        isLoggedIn: false
+      }));
+      return;
+    }
     doFetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    setCurrentUserState(state => ({
+      ...state,
+      isLoading: true
+    }));
+  }, [doFetchData, setCurrentUserState, token]);
+
+  useEffect(() => {
+    if (!response) {
+      return;
+    }
+    setCurrentUserState(state => ({
+      ...state,
+      isLoading: false,
+      isLoggedIn: true,
+      currentUser: response.user
+    }));
+  }, [response, setCurrentUserState]);
   return children;
 };
 
