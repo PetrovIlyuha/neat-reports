@@ -40,6 +40,6 @@ const tagFlex = {
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
-  width: "85px",
-  justifyContent: "space-around"
+  maxWidth: "130px",
+  justifyContent: "space-evenly"
 };
