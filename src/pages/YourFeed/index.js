@@ -5,20 +5,20 @@ import useFetch from "../../hooks/useFetch";
 import Feed from "../../components/Feed";
 import Pagination from "../../components/Pagination/Pagination";
 import PopularTags from "../../components/PopularTags";
-import FeedToggler from "../../components/feedToggler/index";
+import FeedToggler from "../../components/FeedToggler/index";
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
 import { paginator, limit } from "../../utils";
 
 import Banner from "../../img/banner.png";
 
-const GlobalFeed = ({ location, match }) => {
+const YourFeed = ({ location, match }) => {
   const { offset, currentPage } = paginator(location.search);
   const stringifiedParams = stringify({
     limit,
     offset
   });
-  const apiUrl = `/articles?${stringifiedParams}`;
+  const apiUrl = `/articles/feed?${stringifiedParams}`;
   const [{ isLoading, response, error }, doFetchData] = useFetch(apiUrl);
   const url = match.url;
   useEffect(() => {
@@ -55,7 +55,7 @@ const GlobalFeed = ({ location, match }) => {
   );
 };
 
-export default GlobalFeed;
+export default YourFeed;
 
 const bannerStyled = {
   backgroundImage: "url(" + Banner + ")",
