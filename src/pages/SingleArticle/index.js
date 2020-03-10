@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
+import Loading from "../../components/Loading";
+import ErrorMessage from "../../components/ErrorMessage";
+import TagList from "../../components/TagList";
 import useFetch from "../../hooks/useFetch";
 
 const SingleArticle = props => {
@@ -27,6 +30,20 @@ const SingleArticle = props => {
                 </Link>
                 <span className="date">{response.article.createdAt}</span>
               </div>
+            </div>
+          </div>
+        )}
+      </div>
+      <div className="container page">
+        {isLoading && <Loading />}
+        {error && <ErrorMessage />}
+        {!isLoading && response && (
+          <div className="row article-content">
+            <div className="col-xs-12">
+              <div>
+                <p>{response.article.body}</p>
+              </div>
+              <TagList tags={response.article.tagList} />
             </div>
           </div>
         )}
