@@ -1,21 +1,26 @@
 import React, { useState, useEffect, useContext } from "react";
-// import { Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import ArticleForm from "../../components/ArticleForm";
 import useFetch from "../../hooks/useFetch";
-// import { CurrentUserContext } from "../../contexts/currentUser";
+import { CurrentUserContext } from "../../contexts/currentUser";
 
 const EditArticle = ({ match }) => {
   const slug = match.params.slug;
   const apiUrl = `/articles/${slug}`;
   const [{ response: fetchArticleResponse }, doFetchArticle] = useFetch(apiUrl);
+  const [currentUserState] = useContext(CurrentUserContext);
+
   const [
     { response: updateArticleResponse, error: updateArticleError },
     doUpdateArticle
   ] = useFetch(apiUrl);
   const [initialValues, setInitialValues] = useState(null);
+  const [isSuccessfulSubmit, setIsSuccessfulSubmit] = useState(false);
+
   useEffect(() => {
     doFetchArticle();
   }, [doFetchArticle]);
+
   useEffect(() => {
     if (!fetchArticleResponse) {
       return;
@@ -27,8 +32,20 @@ const EditArticle = ({ match }) => {
       tagList: fetchArticleResponse.article.tagList
     });
   }, [fetchArticleResponse]);
+
+  useEffect(() => {
+    if (!updateArticleResponse) {
+      return;
+    }
+    setIsSuccessfulSubmit(true);
+  }, [updateArticleResponse]);
+  if (currentUserState.isLoggedIn === false) {
+    return <Redirect to="/" />;
+  }
+  if (isSuccessfulSubmit) {
+    return <Redirect to={`/articles/${slug}`} />;
+  }
   const handleSubmit = article => {
-    console.log("edit submission", article);
     doUpdateArticle({
       method: "put",
       data: {

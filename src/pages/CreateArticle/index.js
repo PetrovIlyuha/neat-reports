@@ -5,7 +5,7 @@ import useFetch from "../../hooks/useFetch";
 import { CurrentUserContext } from "../../contexts/currentUser";
 const CreateArticle = () => {
   const apiUrl = "/articles";
-  const [{ isLoading, response, error }, doFetchData] = useFetch(apiUrl);
+  const [{ response, error }, doFetchData] = useFetch(apiUrl);
   const [currentUserState] = useContext(CurrentUserContext);
   console.log(currentUserState);
   const initialValues = {
