@@ -26,3 +26,4 @@ const CurrentUserChecker = ({ children }) => {
 };
 
 export default CurrentUserChecker;
+
