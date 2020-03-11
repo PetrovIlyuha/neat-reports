@@ -6,6 +6,7 @@ import Authentication from "./Authentication";
 import TagFeed from "./TagFeed";
 import YourFeed from "./YourFeed";
 import CreateArticle from "./CreateArticle";
+import EditArticle from "./EditArticle";
 
 export default () => {
   return (
@@ -13,6 +14,7 @@ export default () => {
       <Route exact path="/" component={GlobalFeed} />
       <Route path="/tags/:slug" component={TagFeed} />
       <Route path="/articles/new" component={CreateArticle} />
+      <Route path="/articles/:slug/edit" component={EditArticle} />
       <Route path="/feed" component={YourFeed} />
       <Route path="/login" component={Authentication} />
       <Route path="/register" component={Authentication} />
