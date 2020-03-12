@@ -1,10 +1,14 @@
 import React, { useContext, useState, useEffect } from "react";
 import useFetch from "../../hooks/useFetch";
+import { Redirect } from "react-router-dom";
+import useLocalStorage from "../../hooks/useLocalStorage";
 import { CurrentUserContext } from "../../contexts/currentUser";
 import BackendErrorMessages from "../../components/BackendErrors/BackendErrorMessage";
 const Settings = () => {
   const [currentUserState, dispatch] = useContext(CurrentUserContext);
   const apiUrl = "/user";
+  const [, setToken] = useLocalStorage();
+  const [isSuccessfulLogout, setIsSuccessfulLogout] = useState(false);
   const [{ response, error }, doFetchUser] = useFetch(apiUrl);
   const [image, setImage] = useState("");
   const [username, setUserName] = useState("");
@@ -29,7 +33,12 @@ const Settings = () => {
     });
   };
 
-  const logOut = params => {};
+  const logOut = e => {
+    e.preventDefault();
+    setToken("");
+    dispatch({ type: "LOGOUT" });
+    setIsSuccessfulLogout(true);
+  };
 
   useEffect(() => {
     if (!currentUserState.currentUser) {
@@ -49,6 +58,9 @@ const Settings = () => {
     dispatch({ type: "SET_AUTHORIZED", payload: response.user });
   }, [response, dispatch]);
 
+  if (isSuccessfulLogout) {
+    return <Redirect to="/" />;
+  }
   return (
     <div className="settings-page">
       <div className="container page">
