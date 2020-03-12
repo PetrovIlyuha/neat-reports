@@ -7,11 +7,13 @@ import TagFeed from "./TagFeed";
 import YourFeed from "./YourFeed";
 import CreateArticle from "./CreateArticle";
 import EditArticle from "./EditArticle";
+import Settings from "./Settings";
 
 export default () => {
   return (
     <Switch>
       <Route exact path="/" component={GlobalFeed} />
+      <Route path="/settings" component={Settings} />
       <Route path="/tags/:slug" component={TagFeed} />
       <Route path="/articles/new" component={CreateArticle} />
       <Route path="/articles/:slug/edit" component={EditArticle} />

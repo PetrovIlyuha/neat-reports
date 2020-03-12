@@ -3,7 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import MainLogo from "./assets/neatLogo.png";
 import { FaFeatherAlt } from "react-icons/fa";
 import { GiHeatHaze } from "react-icons/gi";
-import { AiOutlineLogin } from "react-icons/ai";
+import { AiOutlineLogin, AiTwotoneSetting } from "react-icons/ai";
 import { FaFileSignature } from "react-icons/fa";
 import { FaUserAstronaut } from "react-icons/fa";
 
@@ -50,6 +50,13 @@ const AppHeader = () => {
                   <FaFeatherAlt />
                   {""}
                   <span style={{ marginLeft: "4px" }}>New Post</span>
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/settings" className="nav-link">
+                  <AiTwotoneSetting />
+                  {""}
+                  <span style={{ marginLeft: "4px" }}>Settings</span>
                 </NavLink>
               </li>
               <li className="nav-item">
