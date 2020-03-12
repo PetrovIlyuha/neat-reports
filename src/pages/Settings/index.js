@@ -1,15 +1,54 @@
-import React, { useContext } from "react";
-
+import React, { useContext, useState, useEffect } from "react";
 import useFetch from "../../hooks/useFetch";
 import { CurrentUserContext } from "../../contexts/currentUser";
 import BackendErrorMessages from "../../components/BackendErrors/BackendErrorMessage";
 const Settings = () => {
-  const [currentUserState] = useContext(CurrentUserContext);
+  const [currentUserState, dispatch] = useContext(CurrentUserContext);
   const apiUrl = "/user";
   const [{ response, error }, doFetchUser] = useFetch(apiUrl);
+  const [image, setImage] = useState("");
+  const [username, setUserName] = useState("");
+  const [bio, setBio] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSubmit = () => {};
+  const handleSubmit = e => {
+    e.preventDefault();
+    doFetchUser({
+      method: "put",
+      data: {
+        user: {
+          ...currentUserState.currentUser,
+          image,
+          username,
+          bio,
+          email,
+          password
+        }
+      }
+    });
+  };
+
   const logOut = params => {};
+
+  useEffect(() => {
+    if (!currentUserState.currentUser) {
+      return;
+    }
+    setImage(currentUserState.currentUser.image);
+    setUserName(currentUserState.currentUser.username);
+    setBio(currentUserState.currentUser.bio);
+    setEmail(currentUserState.currentUser.email);
+  }, [currentUserState.currentUser]);
+
+  useEffect(() => {
+    if (!response) {
+      return;
+    }
+
+    dispatch({ type: "SET_AUTHORIZED", payload: response.user });
+  }, [response, dispatch]);
+
   return (
     <div className="settings-page">
       <div className="container page">
@@ -24,6 +63,8 @@ const Settings = () => {
                     type="text"
                     className="form-control form-control-lg"
                     placeholder="You profile picture"
+                    value={image}
+                    onChange={e => setImage(e.target.value)}
                   />
                 </fieldset>
                 <fieldset className="form-group">
@@ -31,6 +72,8 @@ const Settings = () => {
                     type="text"
                     className="form-control form-control-lg"
                     placeholder="Username"
+                    value={username}
+                    onChange={e => setUserName(e.target.value)}
                   />
                 </fieldset>
                 <fieldset className="form-group">
@@ -38,6 +81,8 @@ const Settings = () => {
                     className="form-control form-control-lg"
                     rows="8"
                     placeholder="Your short biography"
+                    value={bio}
+                    onChange={e => setBio(e.target.value)}
                   ></textarea>
                 </fieldset>
                 <fieldset className="form-group">
@@ -45,6 +90,8 @@ const Settings = () => {
                     type="email"
                     className="form-control form-control-lg"
                     placeholder="E-mail"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
                   />
                 </fieldset>
                 <fieldset className="form-group">
@@ -52,6 +99,8 @@ const Settings = () => {
                     type="password"
                     className="form-control form-control-lg"
                     placeholder="Password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
                   />
                 </fieldset>
                 <button
@@ -63,7 +112,7 @@ const Settings = () => {
               </fieldset>
             </form>
             <hr />
-            <button className="btn btn-ouline-danger" onClick={logOut}>
+            <button className="btn btn-outline-danger" onClick={logOut}>
               Or click here to log out..
             </button>
           </div>
