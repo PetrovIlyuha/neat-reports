@@ -1,5 +1,5 @@
-import React, { useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useContext, useState } from "react";
+import { Link, Redirect } from "react-router-dom";
 
 import Loading from "../../components/Loading";
 import ErrorMessage from "../../components/ErrorMessage";
@@ -14,45 +14,76 @@ import { FaTrashAlt } from "react-icons/fa";
 const SingleArticle = props => {
   const slug = props.match.params.slug;
   const apiUrl = `/articles/${slug}`;
-  const [{ isLoading, response, error }, doFetchData] = useFetch(apiUrl);
+  const [
+    {
+      isLoading: fetchArticleIsLoading,
+      response: fetchArticleResponse,
+      error: fetchArticleError
+    },
+    doFetchData
+  ] = useFetch(apiUrl);
+  const [{ response: deleteArticleResponse }, doDeleteArticle] = useFetch(
+    apiUrl
+  );
+  const [isSuccessfulDelete, setIsSuccessfulDelete] = useState(false);
   const [currentUserState] = useContext(CurrentUserContext);
 
   const isAuthor = () => {
-    if (!response || !currentUserState.isLoggedIn) {
+    if (!fetchArticleResponse || !currentUserState.isLoggedIn) {
       return false;
     }
     return (
-      response.article.author.username === currentUserState.currentUser.username
+      fetchArticleResponse.article.author.username ===
+      currentUserState.currentUser.username
     );
   };
-
+  useEffect(() => {
+    if (!deleteArticleResponse) {
+      return;
+    }
+    setIsSuccessfulDelete(true);
+  }, [deleteArticleResponse]);
   useEffect(() => {
     doFetchData();
   }, [doFetchData]);
+
+  if (isSuccessfulDelete) {
+    return <Redirect to="/" />;
+  }
+
   const deleteArticle = () => {
-    console.log("delete article");
+    doDeleteArticle({
+      method: "delete"
+    });
   };
+
   return (
     <div className="article-page">
       <div className="banner">
-        {!isLoading && response && (
+        {!fetchArticleIsLoading && fetchArticleResponse && (
           <div className="container">
-            <h1>{response.article.title}</h1>
+            <h1>{fetchArticleResponse.article.title}</h1>
             <div className="article-meta">
-              <Link to={`/profiles/${response.article.author.username}`}>
-                <img src={response.article.author.image} alt="" />
+              <Link
+                to={`/profiles/${fetchArticleResponse.article.author.username}`}
+              >
+                <img src={fetchArticleResponse.article.author.image} alt="" />
               </Link>
               <div className="info">
-                <Link to={`/profiles/${response.article.author.username}`}>
-                  {response.article.author.username}{" "}
+                <Link
+                  to={`/profiles/${fetchArticleResponse.article.author.username}`}
+                >
+                  {fetchArticleResponse.article.author.username}{" "}
                 </Link>
-                <span className="date">{response.article.createdAt}</span>
+                <span className="date">
+                  {fetchArticleResponse.article.createdAt}
+                </span>
               </div>
               {isAuthor() && (
                 <span>
                   <Link
                     className="btn btn-outline-secondary btn-sm"
-                    to={`/articles/${response.article.slug}/edit`}
+                    to={`/articles/${fetchArticleResponse.article.slug}/edit`}
                   >
                     <AiTwotoneEdit />
                     Edit Article
@@ -72,15 +103,15 @@ const SingleArticle = props => {
         )}
       </div>
       <div className="container page">
-        {isLoading && <Loading />}
-        {error && <ErrorMessage />}
-        {!isLoading && response && (
+        {fetchArticleIsLoading && <Loading />}
+        {fetchArticleError && <ErrorMessage />}
+        {!fetchArticleIsLoading && fetchArticleResponse && (
           <div className="row article-content">
             <div className="col-xs-12">
               <div>
-                <p>{response.article.body}</p>
+                <p>{fetchArticleResponse.article.body}</p>
               </div>
-              <TagList tags={response.article.tagList} />
+              <TagList tags={fetchArticleResponse.article.tagList} />
             </div>
           </div>
         )}
