@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import { NavLink } from "react-router-dom";
+import UserArticles from "./components/UserArticles";
 import useFetch from "../../hooks/useFetch";
 
 const UserProfile = ({ location, match }) => {
   const slug = match.params.slug;
+  console.log(location);
   const isFavorites = location.pathname.includes("favorites");
   const apiUrl = `/profiles/${slug}`;
   const [{ response }, doFetch] = useFetch(apiUrl);
@@ -53,7 +55,11 @@ const UserProfile = ({ location, match }) => {
                 </li>
               </ul>
             </div>
-            User Articles
+            <UserArticles
+              username={response.profile.username}
+              location={location}
+              isFavorites={isFavorites}
+            />
           </div>
         </div>
       </div>
