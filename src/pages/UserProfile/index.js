@@ -5,7 +5,6 @@ import useFetch from "../../hooks/useFetch";
 
 const UserProfile = ({ location, match }) => {
   const slug = match.params.slug;
-  console.log(location);
   const isFavorites = location.pathname.includes("favorites");
   const apiUrl = `/profiles/${slug}`;
   const [{ response }, doFetch] = useFetch(apiUrl);
@@ -59,6 +58,7 @@ const UserProfile = ({ location, match }) => {
               username={response.profile.username}
               location={location}
               isFavorites={isFavorites}
+              url={match.url}
             />
           </div>
         </div>

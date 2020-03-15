@@ -14,14 +14,14 @@ const getApiUrl = ({ username, offset, isFavorites }) => {
   return `/articles?${stringify(params)}`;
 };
 
-const UserArticles = ({ username, location, isFavorites }) => {
+const UserArticles = ({ username, location, isFavorites, url }) => {
   const { offset, currentPage } = paginator(location.search);
   const apiUrl = getApiUrl({ username, offset, isFavorites });
   const [{ response, isLoading, error }, doFetch] = useFetch(apiUrl);
 
   useEffect(() => {
     doFetch();
-  }, [doFetch]);
+  }, [doFetch, isFavorites]);
   return (
     <div>
       {isLoading && <Loading />}
@@ -32,7 +32,7 @@ const UserArticles = ({ username, location, isFavorites }) => {
           <Pagination
             total={response.articlesCount}
             limit={limit}
-            url={apiUrl}
+            url={url}
             currentPage={currentPage}
           />
         </>
